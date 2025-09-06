@@ -1,0 +1,24 @@
+{
+  "name": "demoqa",
+  "version": "1.0.0",
+  "description": "Testes de API e UI utilizando Javascript e Cypress",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joycepontesf/demoqa.git"
+  },
+  "keywords": [],
+  "author": "Joyce Pontes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joycepontesf/demoqa/issues"
+  },
+  "homepage": "https://github.com/joycepontesf/demoqa#readme",
+  "dependencies": {
+    "cypress": "^15.1.0"
+  }
+}

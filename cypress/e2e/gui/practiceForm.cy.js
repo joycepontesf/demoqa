@@ -1,41 +1,39 @@
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 
 describe('Practice Form', () => {
-    
-    it('Should fill the form', () => {
+    const testData = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        userEmail: faker.internet.email(),
+        gender: '3',
+        userNumber: faker.string.numeric(10),
+        dateOfBirth: '2000',
+        subjects: 'english',
+        month: '4',
+        hobbies: '2',
+        file: 'cypress/fixtures/exampleFile.txt',
+        currentAddress: faker.location.streetAddress(),
+        state: 'Haryana',
+        city: 'Panipat'
+    }
+
+    beforeEach(() => {
         cy.clearCookies()
         cy.clearLocalStorage()
         cy.visit('/')
-        
-        cy.contains('.card', 'Forms').click()
-        cy.contains('li', 'Practice Form').click()
+        cy.accessPage('Forms')
+        cy.chooseMenuItem('Practice Form')
+    })
 
-        cy.get('#firstName').type(faker.person.firstName())
-        cy.get('#lastName').type(faker.person.lastName())
-        cy.get('#userEmail').type(faker.internet.email())
-        cy.get('[for="gender-radio-2"]').click()
-        cy.get('#gender-radio-2').check()
-        cy.get('#userNumber').type('8199999999')
-        cy.get('#dateOfBirthInput').click()
-        cy.get('.react-datepicker__year-select').select('2000')
-        cy.get('.react-datepicker__day-names').click()
-        cy.get('.react-datepicker__month-select').select('4')
-        cy.get('[aria-label="Choose Wednesday, May 10th, 2000"]').click()
-        cy.get('.subjects-auto-complete__value-container').click()
-        cy.get('#subjectsInput').type('engl')
-        cy.get('#react-select-2-option-0').click()
-        cy.get('#subjectsInput').type('soc')
-        cy.get('#react-select-2-option-0').click()
-        cy.get('[for="hobbies-checkbox-3"]').click()
-        cy.get('#hobbies-checkbox-3').check()
-        cy.get('[for="hobbies-checkbox-1"]').click()
-        cy.get('#hobbies-checkbox-1').check()
-        cy.get('#uploadPicture').selectFile('cypress/fixtures/exampleFile.txt')
-        cy.get('#currentAddress').type(faker.location.streetAddress())
-        cy.get('#state').click().contains('Haryana').click()
-        cy.get('#city').click().contains('Panipat').click()
-        cy.get('#submit').click()
+    it('Should fill and submit the form successfully', () => {
+        cy.fillPracticeForm(testData.firstName, testData.lastName, testData.userEmail, testData.gender, testData.userNumber, testData.dateOfBirth, testData.subjects, testData.month, testData.hobbies, testData.file, testData.currentAddress, testData.state, testData.city)
+        
+        cy.clickButton('submit')
+        
         cy.contains('Thanks for submitting the form').should('be.visible')
-        cy.get('#closeLargeModal').click({force: true})
+        
+        cy.closeModal()
+
+        cy.contains('Thanks for submitting the form').should('not.exist')
     })
 })

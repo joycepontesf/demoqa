@@ -1,22 +1,19 @@
 describe('Alerts, Frame & Windows', () => {
 
-    it('Should open a new tab', () => {
+    beforeEach(() => {
         cy.clearCookies()
         cy.clearLocalStorage()
         cy.visit('/')
+    })
 
-        cy.contains('.card', 'Alerts, Frame & Windows').click()
-        cy.contains('li', 'Browser Windows').click()
+    it('Should open a new tab', () => {
+        cy.accessPage('Alerts, Frame & Windows')
+        cy.chooseMenuItem('Browser Windows')
+        cy.stubWindowOpen()
 
-        cy.window().then((win) => {
-            cy.stub(win, 'open').callsFake((url) => {
-                win.location.href = url
-            })
-        })
+        cy.clickButton('windowButton')
 
-        cy.get('#windowButton').click()
-
-        cy.url().should('include', 'sample') 
+        cy.url().should('contains', 'sample')
         cy.contains('This is a sample page').should('be.visible')
 
         cy.go('back')

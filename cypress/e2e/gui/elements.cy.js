@@ -1,42 +1,39 @@
+import { faker } from '@faker-js/faker'
+
 describe('Elements', () => {
-    it('Should create a record', () => {
+    const testData = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        userEmail: faker.internet.email(),
+        age: faker.string.numeric(2),
+        salary: faker.string.numeric(6),
+        department: faker.person.jobTitle(),
+        editName: faker.person.firstName()
+    }
+
+    beforeEach(() => {
         cy.clearCookies()
         cy.clearLocalStorage()
         cy.visit('/')
-
-        cy.contains('.card', 'Elements').click()
-        cy.contains('li', 'Web Tables').click()
-        cy.get('#addNewRecordButton').click()
-        cy.get('#firstName').type('Principal')
-        cy.get('#lastName').type('QA')
-        cy.get('#userEmail').type('example@example.com')
-        cy.get('#age').type('1000')
-        cy.get('#salary').type('100000')
-        cy.get('#department').type('Finance')
-        cy.get('#submit').click()
-
-        cy.get('.rt-tr').should('contain', 'Principal').and('be.visible')
+        cy.accessPage('Elements')
+        cy.chooseMenuItem('Web Tables')
+    })
+    
+    it('Should create, edit and delete a record', () => {
+        cy.clickButton('addNewRecordButton')
+        cy.openRegistrationForm()
+        cy.fillWebTables(testData.firstName, testData.lastName, testData.userEmail, testData.age, testData.salary, testData.department)
+        cy.saveForm()
         
-        cy.get('.rt-table').scrollTo('right')
-            .contains('.rt-tr', 'Principal')
-            .within(() => {
-                cy.get('[id^=edit-record-]').click()
-            })
-
-        cy.get('#registration-form-modal').should('be.visible')
-        cy.get('#firstName').should('be.enabled')
-
-        cy.get('#firstName').clear().type('QA')
-        cy.get('#submit').click()
-
-        cy.get('.rt-tr').should('contain', 'QA').and('be.visible')
+        cy.verifyRowExists(testData.firstName)
         
-        cy.get('.rt-table').scrollTo('right')
-            .contains('.rt-tr', 'QA')
-            .within(() => {
-                cy.get('[id^=delete-record-]').click()
-            })
+        cy.tableRowAction('.rt-table', testData.firstName, 'edit')
+        cy.openRegistrationForm()
+        cy.fillWebTables(testData.editName, testData.lastName, testData.userEmail, testData.age, testData.salary, testData.department)
+        cy.saveForm()
         
-        cy.get('.rt-tr').should('not.contain', 'QA')
+        cy.verifyRowExists(testData.editName)
+        cy.tableRowAction('.rt-table', testData.editName, 'delete')
+        cy.verifyRowExists(testData.editName, false)
     })
 })

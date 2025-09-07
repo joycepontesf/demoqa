@@ -1,41 +1,39 @@
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 
 describe('Practice Form', () => {
-    
-    it('Should fill the form', () => {
+
+    beforeEach(() => {
         cy.clearCookies()
         cy.clearLocalStorage()
         cy.visit('/')
-        
-        cy.contains('.card', 'Forms').click()
-        cy.contains('li', 'Practice Form').click()
+    })
 
-        cy.get('#firstName').type(faker.person.firstName())
-        cy.get('#lastName').type(faker.person.lastName())
-        cy.get('#userEmail').type(faker.internet.email())
-        cy.get('[for="gender-radio-2"]').click()
-        cy.get('#gender-radio-2').check()
-        cy.get('#userNumber').type('8199999999')
-        cy.get('#dateOfBirthInput').click()
-        cy.get('.react-datepicker__year-select').select('2000')
-        cy.get('.react-datepicker__day-names').click()
-        cy.get('.react-datepicker__month-select').select('4')
-        cy.get('[aria-label="Choose Wednesday, May 10th, 2000"]').click()
-        cy.get('.subjects-auto-complete__value-container').click()
-        cy.get('#subjectsInput').type('engl')
-        cy.get('#react-select-2-option-0').click()
-        cy.get('#subjectsInput').type('soc')
-        cy.get('#react-select-2-option-0').click()
-        cy.get('[for="hobbies-checkbox-3"]').click()
-        cy.get('#hobbies-checkbox-3').check()
-        cy.get('[for="hobbies-checkbox-1"]').click()
-        cy.get('#hobbies-checkbox-1').check()
-        cy.get('#uploadPicture').selectFile('cypress/fixtures/exampleFile.txt')
-        cy.get('#currentAddress').type(faker.location.streetAddress())
-        cy.get('#state').click().contains('Haryana').click()
-        cy.get('#city').click().contains('Panipat').click()
-        cy.get('#submit').click()
+    it('Should fill the form', () => {
+
+        const firstName = faker.person.firstName()
+        const lastName = faker.person.lastName()
+        const userEmail = faker.internet.email()
+        const gender = '3'
+        const userNumber = faker.string.numeric(10)
+        const yearOfBirth = '2000'
+        const subjects1 = 'english'
+        const subjects2 = 'math'
+        const month = '4'
+        const hobbies = '3'
+        const file = 'cypress/fixtures/exampleFile.txt'
+        const currentAddress = faker.location.streetAddress()
+        const state = 'Haryana'
+        const city = 'Panipat'
+
+        cy.accessPage('Forms')
+        cy.chooseMenuItem('Practice Form')
+
+        cy.fillForm(firstName, lastName, userEmail, gender, userNumber, yearOfBirth, subjects1, subjects2, month, hobbies, file, currentAddress, state, city)
+        
+        cy.clickButton('submit')
+        
         cy.contains('Thanks for submitting the form').should('be.visible')
-        cy.get('#closeLargeModal').click({force: true})
+       
+        cy.clickButton('closeLargeModal')
     })
 })
